@@ -1,4 +1,5 @@
-import React from 'react'
+import { React, useState, useEffect } from 'react'
+import { Bar } from 'react-chartjs-2'
 import classNames from 'classnames'
 
 import {
@@ -380,7 +381,49 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      <DataGraph></DataGraph>
     </>
+  )
+}
+
+const DataGraph = () => {
+  const [jsonData, setJsonData] = useState(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/data')
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        setJsonData(data)
+      } catch (error) {
+        console.error('There was a problem with the fetch operation:', error)
+      }
+    }
+
+    fetchData()
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  let returnContent = <p>Loading...</p>
+  if (jsonData) {
+    const data = {
+      labels: jsonData.FirstName,
+      datasets: [
+        {
+          data: jsonData.Count,
+        },
+      ],
+    }
+    returnContent = <Bar data={data} />
+  }
+
+  return (
+    <div>
+      <h1>JSON Data</h1>
+      {returnContent}
+    </div>
   )
 }
 
