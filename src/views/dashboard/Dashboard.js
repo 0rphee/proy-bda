@@ -1,5 +1,6 @@
 import { React, useState, useEffect } from 'react'
-import { Bar } from 'react-chartjs-2'
+// import { Bar } from 'react-chartjs-2'
+import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
 import {
@@ -389,6 +390,8 @@ const Dashboard = () => {
 const DataGraph = () => {
   const [jsonData, setJsonData] = useState(null)
 
+  let returnContent = <p>Loading...</p>;
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -399,24 +402,25 @@ const DataGraph = () => {
         const data = await response.json()
         setJsonData(data)
       } catch (error) {
-        console.error('There was a problem with the fetch operation:', error)
+        const errMsg = 'There was a problem with the fetch operation:';
+        console.error(errMsg, error)
+        returnContent = <p>{errMsg}</p>;
       }
     }
 
     fetchData()
   }, []) // Empty dependency array ensures the effect runs only once
 
-  let returnContent = <p>Loading...</p>
   if (jsonData) {
     const data = {
-      labels: jsonData.FirstName,
+      labels: jsonData.Developer,
       datasets: [
         {
           data: jsonData.Count,
         },
       ],
     }
-    returnContent = <Bar data={data} />
+    returnContent = <CChart type="bar" data={data} />;
   }
 
   return (
