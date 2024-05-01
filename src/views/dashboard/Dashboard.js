@@ -38,6 +38,7 @@ import {
   cifIn,
   cifPl,
   cifUs,
+  cifMx,
   cibTwitter,
   cilCloudDownload,
   cilPeople,
@@ -55,6 +56,7 @@ import avatar6 from 'src/assets/images/avatars/6.jpg'
 import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import MainChart from './MainChart'
+import { json } from 'react-router-dom'
 
 const Dashboard = () => {
   const progressExample = [
@@ -95,9 +97,9 @@ const Dashboard = () => {
         new: true,
         registered: 'Jan 1, 2023',
       },
-      country: { name: 'USA', flag: cifUs },
+      country: { name: 'Mexico', flag: cifMx },
       usage: {
-        value: 50,
+        value: 100,
         period: 'Jun 11, 2023 - Jul 10, 2023',
         color: 'success',
       },
@@ -111,7 +113,7 @@ const Dashboard = () => {
         new: false,
         registered: 'Jan 1, 2023',
       },
-      country: { name: 'Brazil', flag: cifBr },
+      country: { name: 'Mexico', flag: cifMx  },
       usage: {
         value: 22,
         period: 'Jun 11, 2023 - Jul 10, 2023',
@@ -123,7 +125,7 @@ const Dashboard = () => {
     {
       avatar: { src: avatar3, status: 'warning' },
       user: { name: 'Quintin Ed', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'India', flag: cifIn },
+      country: {name: 'Mexico', flag: cifMx },
       usage: {
         value: 74,
         period: 'Jun 11, 2023 - Jul 10, 2023',
@@ -135,7 +137,7 @@ const Dashboard = () => {
     {
       avatar: { src: avatar4, status: 'secondary' },
       user: { name: 'Enéas Kwadwo', new: true, registered: 'Jan 1, 2023' },
-      country: { name: 'France', flag: cifFr },
+      country: {name: 'Mexico', flag: cifMx },
       usage: {
         value: 98,
         period: 'Jun 11, 2023 - Jul 10, 2023',
@@ -151,7 +153,7 @@ const Dashboard = () => {
         new: true,
         registered: 'Jan 1, 2023',
       },
-      country: { name: 'Spain', flag: cifEs },
+      country: {name: 'Mexico', flag: cifMx },
       usage: {
         value: 22,
         period: 'Jun 11, 2023 - Jul 10, 2023',
@@ -167,7 +169,7 @@ const Dashboard = () => {
         new: true,
         registered: 'Jan 1, 2023',
       },
-      country: { name: 'Poland', flag: cifPl },
+      country: {name: 'Mexico', flag: cifMx },
       usage: {
         value: 43,
         period: 'Jun 11, 2023 - Jul 10, 2023',
@@ -331,15 +333,17 @@ const Dashboard = () => {
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       <CIcon icon={cilPeople} />
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">User</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
                     <CTableHeaderCell className="bg-body-tertiary text-center">
                       Country
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Usage</CTableHeaderCell>
+                    <CTableHeaderCell className="bg-body-tertiary">Calificación</CTableHeaderCell>
+                    
                     <CTableHeaderCell className="bg-body-tertiary text-center">
-                      Payment Method
+                      Pendiente
                     </CTableHeaderCell>
-                    <CTableHeaderCell className="bg-body-tertiary">Activity</CTableHeaderCell>
+                    
+                    <CTableHeaderCell className="bg-body-tertiary">Pendiente2</CTableHeaderCell>
                   </CTableRow>
                 </CTableHead>
                 <CTableBody>
@@ -383,6 +387,8 @@ const Dashboard = () => {
         </CCol>
       </CRow>
       <DataGraph></DataGraph>
+      <DataGraph2></DataGraph2>
+      <DataGraph3></DataGraph3>
     </>
   )
 }
@@ -395,7 +401,7 @@ const DataGraph = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/data')
+        const response = await fetch('http://127.0.0.1:8000/data1')
         if (!response.ok) {
           throw new Error('Network response was not ok')
         }
@@ -416,19 +422,120 @@ const DataGraph = () => {
       labels: jsonData.Developer,
       datasets: [
         {
-          data: jsonData.Count,
-        },
+          data: jsonData.N_Games,
+          label: "Número de juegos publicados"
+        }
       ],
+
     }
+    
     returnContent = <CChart type="bar" data={data} />;
   }
 
   return (
     <div>
-      <h1>JSON Data</h1>
+      <h1>Top 10 Developers </h1>
       {returnContent}
     </div>
   )
 }
+
+const DataGraph2 = () => {
+  const [jsonData, setJsonData] = useState(null)
+
+  let returnContent = <p>Loading...</p>;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/data2')
+        if (!response.ok) {
+          throw new Error('Network response was not ok')
+        }
+        const data = await response.json()
+        setJsonData(data)
+      } catch (error) {
+        const errMsg = 'There was a problem with the fetch operation:';
+        console.error(errMsg, error)
+        returnContent = <p>{errMsg}</p>;
+      }
+    }
+
+    fetchData()
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const data = {
+      labels: jsonData.Publisher,
+      datasets: [
+        {
+          data: jsonData.N_Games,
+          label: "Número de juegos publicados"
+        }
+      ],
+
+    }
+    
+    returnContent = <CChart type="bar" data={data} />;
+  }
+
+  return (
+    <div>
+      <h1>Top 10 Publishers </h1>
+      {returnContent}
+    </div>
+  )
+}
+
+
+const DataGraph3 = () => {
+  const [jsonData, setJsonData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/data3');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setJsonData(data);
+      } catch (error) {
+        const errMsg = 'There was a problem with the fetch operation:';
+        console.error(errMsg, error);
+        setErrorMessage(errMsg);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (errorMessage) {
+    return <p>{errorMessage}</p>;
+  }
+
+  if (!jsonData) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <CTableBody>
+      {jsonData.Developer.map((developer, index) => (
+        <CTableRow key={index}>
+          {/* Otras celdas de la tabla */}
+          <CTableDataCell>
+            <div>
+              {jsonData.Positive_rating_percentage[index]}%
+            </div>
+            <CProgress thin color="success" value={parseFloat(jsonData.Positive_rating_percentage[index])} />
+          </CTableDataCell>
+          {/* Otras celdas de la tabla */}
+        </CTableRow>
+      ))}
+    </CTableBody>
+  );
+};
+
 
 export default Dashboard
