@@ -393,28 +393,32 @@ const Dashboard = () => {
   )
 }
 
+const fetchData = async (jsonDataSetter, returnContentSetter, url) => {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) {
+      throw new Error('Network response was not ok');
+    }
+    const data = await response.json();
+    jsonDataSetter(data);
+  } catch (error) {
+    const errMsg = 'There was a problem with the fetch operation:';
+    console.error(errMsg, error);
+    returnContentSetter(<p>{errMsg}</p>);
+  }
+}
+
+
 const DataGraph = () => {
   const [jsonData, setJsonData] = useState(null)
 
   let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/data1')
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        const data = await response.json()
-        setJsonData(data)
-      } catch (error) {
-        const errMsg = 'There was a problem with the fetch operation:';
-        console.error(errMsg, error)
-        returnContent = <p>{errMsg}</p>;
-      }
-    }
-
-    fetchData()
+    fetchData(setJsonData, setReturnContent,'http://127.0.0.1:8000/data1');
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
@@ -426,7 +430,6 @@ const DataGraph = () => {
           label: "Número de juegos publicados"
         }
       ],
-
     }
     
     returnContent = <CChart type="bar" data={data} />;
@@ -444,24 +447,12 @@ const DataGraph2 = () => {
   const [jsonData, setJsonData] = useState(null)
 
   let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/data2')
-        if (!response.ok) {
-          throw new Error('Network response was not ok')
-        }
-        const data = await response.json()
-        setJsonData(data)
-      } catch (error) {
-        const errMsg = 'There was a problem with the fetch operation:';
-        console.error(errMsg, error)
-        returnContent = <p>{errMsg}</p>;
-      }
-    }
-
-    fetchData()
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data2');
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
@@ -473,7 +464,6 @@ const DataGraph2 = () => {
           label: "Número de juegos publicados"
         }
       ],
-
     }
     
     returnContent = <CChart type="bar" data={data} />;
@@ -490,30 +480,15 @@ const DataGraph2 = () => {
 
 const DataGraph3 = () => {
   const [jsonData, setJsonData] = useState(null);
-  const [errorMessage, setErrorMessage] = useState(null);
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/data3');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setJsonData(data);
-      } catch (error) {
-        const errMsg = 'There was a problem with the fetch operation:';
-        console.error(errMsg, error);
-        setErrorMessage(errMsg);
-      }
-    };
-
-    fetchData();
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data3');
   }, []);
-
-  if (errorMessage) {
-    return <p>{errorMessage}</p>;
-  }
 
   if (!jsonData) {
     return <p>Loading...</p>;
