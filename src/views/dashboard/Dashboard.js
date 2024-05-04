@@ -3,6 +3,7 @@ import { React, useState, useEffect } from 'react'
 import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
+
 import {
   CAvatar,
   CButton,
@@ -99,7 +100,7 @@ const Dashboard = () => {
       },
       country: { name: 'Mexico', flag: cifMx },
       usage: {
-        value: 100,
+        value: 50,
         period: 'Jun 11, 2023 - Jul 10, 2023',
         color: 'success',
       },
@@ -370,7 +371,9 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <CProgress thin color={item.usage.color} value={item.usage.value} />
+                        <DataGraph3></DataGraph3>
                       </CTableDataCell>
+                      
                       <CTableDataCell className="text-center">
                         <CIcon size="xl" icon={item.payment.icon} />
                       </CTableDataCell>
@@ -386,12 +389,17 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      <DataGraph5></DataGraph5>
       <DataGraph></DataGraph>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
+      <DataGraph4></DataGraph4>
+      
     </>
   )
 }
+
+
 
 const DataGraph = () => {
   const [jsonData, setJsonData] = useState(null)
@@ -536,6 +544,116 @@ const DataGraph3 = () => {
     </CTableBody>
   );
 };
+const DataGraph4 = () => {
+  const [jsonData, setJsonData] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
 
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/data3');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setJsonData(data);
+      } catch (error) {
+        const errMsg = 'There was a problem with the fetch operation:';
+        console.error(errMsg, error);
+        setErrorMessage(errMsg);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  if (errorMessage) {
+    return <p>{errorMessage}</p>;
+  }
+
+  if (!jsonData) {
+    return <p>Loading...</p>;
+  }
+
+  return (
+    <div>
+      <h2 className="text-center mb-4">Top 10 best positive ratings</h2>
+    <CTable align="middle" className="mb-0 border" hover responsive>
+      <CTableHead className="text-nowrap">
+        <CTableRow>
+        <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
+        <CTableHeaderCell className="bg-body-tertiary">Positive Rating Percentage</CTableHeaderCell>
+        <CTableHeaderCell className="bg-body-tertiary">Total Ratings</CTableHeaderCell>
+        </CTableRow>
+      </CTableHead>
+      <CTableBody>
+        {jsonData.Developer.map((developer, index) => (
+          <CTableRow key={index}>
+            <CTableDataCell>
+              <div>{developer}</div>
+            </CTableDataCell>
+            <CTableDataCell>
+              <div>
+                {jsonData.Positive_rating_percentage[index]}%
+              </div>
+              <CProgress thin color="success" value={parseFloat(jsonData.Positive_rating_percentage[index])} />
+            </CTableDataCell>
+            <CTableDataCell>
+              <div>{jsonData.Total_ratings[index]}</div>
+            </CTableDataCell>
+          </CTableRow>
+        ))}
+      </CTableBody>
+    </CTable>
+    </div>
+  );
+};
+
+
+const DataGraph5 = () => {
+  const [jsonData, setJsonData] = useState(null);
+
+  let returnContent = <p>Loading...</p>;
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/data8');
+        if (!response.ok) {
+          throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        setJsonData(data);
+      } catch (error) {
+        const errMsg = 'There was a problem with the fetch operation:';
+        console.error(errMsg, error);
+        returnContent = <p>{errMsg}</p>;
+      }
+    };
+
+    fetchData();
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const data = {
+      labels: jsonData.game,
+      datasets: [
+        {
+          data: jsonData.Avg_owners,
+          label: "Avg_owners"
+        }
+      ],
+    };
+
+    returnContent = <CChart type="bar" data={data} />;
+  }
+
+  return (
+    <div>
+      <h1>Top 10 Games by Avg_owners</h1>
+      {returnContent}
+    </div>
+  );
+};
 
 export default Dashboard
