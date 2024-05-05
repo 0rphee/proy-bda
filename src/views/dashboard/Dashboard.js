@@ -391,7 +391,7 @@ const Dashboard = () => {
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
-      <DataGraph5></DataGraph5>
+      <DataGraph6></DataGraph6>
       
     </>
   )
@@ -534,33 +534,22 @@ const DataGraph3 = () => {
 };
 
 
-const DataGraph5 = () => {
+const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
 
   let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/data6');
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-        const data = await response.json();
-        setJsonData(data);
-      } catch (error) {
-        const errMsg = 'There was a problem with the fetch operation:';
-        console.error(errMsg, error);
-        returnContent = <p>{errMsg}</p>;
-      }
-    };
-
-    fetchData();
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data6');
   }, []); // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    console.log(jsonData);
     const data = {
-      labels: jsonData.game,
+      labels: jsonData.name,
       datasets: [
         {
           data: jsonData.Avg_owners,
