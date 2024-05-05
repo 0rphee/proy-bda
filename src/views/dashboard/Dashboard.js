@@ -547,18 +547,21 @@ const DataGraph6 = () => {
   }, []); // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
-    console.log(jsonData);
+    const resultData =  jsonData.slice(0, 25).map( (item) => {
+          return {
+            label: item.name,
+            data: [ {
+              x: item.avg_owners,
+              y: item.positive_ratings,
+              r: item.price,
+            } ]
+          };
+        });
     const data = {
-      labels: jsonData.name,
-      datasets: [
-        {
-          data: jsonData.Avg_owners,
-          label: "Avg_owners"
-        }
-      ],
+      datasets:  resultData,
     };
 
-    returnContent = <CChart type="bar" data={data} />;
+    returnContent = <CChart type="bubble" data={data} />;
   }
 
   return (
