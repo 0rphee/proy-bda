@@ -551,9 +551,9 @@ const DataGraph6 = () => {
           return {
             label: item.name,
             data: [ {
-              x: item.avg_owners,
+              x: item.price,
               y: item.positive_ratings,
-              r: item.price,
+              r: item.avg_owners / 1000000,
             } ]
           };
         });
