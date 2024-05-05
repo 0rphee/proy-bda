@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react'
-// import { Bar } from 'react-chartjs-2'
+import { Bar, Bubble } from 'react-chartjs-2'
 import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
@@ -554,15 +554,52 @@ const DataGraph6 = () => {
             data: [ {
               x: item.price,
               y: item.positive_ratings,
-              r: item.avg_owners / 1000000,
+              r: item.avg_owners / 2500000,
             } ]
           };
         });
+
+    const options = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "% of Positive ratings"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Price (USD)"
+          }
+        }
+      },
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return `${tooltipItem.dataset.label}:`;
+            },
+            afterLabel: (tooltipItem) => {
+              const x = "(x) Price (USD): $" + tooltipItem.dataset.data[0].x.toLocaleString();
+              const y = "(y) % Positive Reviews: " + tooltipItem.dataset.data[0].y.toLocaleString() + "%";
+              const r = "(radius) Average # of owners: " + (tooltipItem.dataset.data[0].r * 2500000).toLocaleString();
+              return `${x}\n${y}\n${r}`;
+            }
+          },
+        },
+      }
+    };
     const data = {
       datasets:  resultData,
     };
 
-    returnContent = <CChart type="bubble" data={data} />;
+    returnContent = <Bubble options={options} data={data} />;
   }
 
   return (
@@ -599,18 +636,53 @@ const DataGraph7 = () => {
   };
 
   if (jsonData) {
-    const resultData = jsonData.slice(0, 10).map((item) => {
+    const resultData = jsonData.map((item) => {
       return {
         label: item.name,
         data: [
           {
-            x: item.appid,
             y: item.average_playtime,
-            r: item.avg_owners / 10000, // Dividir por un factor para hacer los círculos más pequeños
+            x: item.avg_owners, // Dividir por un factor para hacer los círculos más pequeños
           },
         ],
       };
     });
+
+    const options = {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Average total playtime (min)"
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Average # of owners"
+          }
+        }
+      },
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return `${tooltipItem.dataset.label}:`;
+            },
+            afterLabel: (tooltipItem) => {
+              const y = "(y) Average total playtime (min): " + tooltipItem.dataset.data[0].x.toLocaleString();
+              const x = "(x) Average # of owners: " + tooltipItem.dataset.data[0].y.toLocaleString();
+              return `${x}\n${y}`;
+            }
+          },
+        },
+      }
+    };
     const data = {
       datasets: resultData,
     };
@@ -618,7 +690,7 @@ const DataGraph7 = () => {
     // Renderizar el contenido del gráfico dependiendo de si hay una burbuja señalada o no
     returnContent = (
       <div>
-        <CChart type="bubble" data={data} onHover={handleBubbleHover} />
+        <Bubble options={options} data={data} onHover={handleBubbleHover} />
         {hoveredBubble && (
           <p>Nombre: {jsonData[hoveredBubble.index].name}</p>
         )}
