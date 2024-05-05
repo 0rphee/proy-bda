@@ -371,7 +371,6 @@ const Dashboard = () => {
                           </div>
                         </div>
                         <CProgress thin color={item.usage.color} value={item.usage.value} />
-                        <DataGraph3></DataGraph3>
                       </CTableDataCell>
                       
                       <CTableDataCell className="text-center">
@@ -389,11 +388,10 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
-      <DataGraph5></DataGraph5>
-      <DataGraph></DataGraph>
+      <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
-      <DataGraph4></DataGraph4>
+      <DataGraph5></DataGraph5>
       
     </>
   )
@@ -417,7 +415,7 @@ const fetchData = async (jsonDataSetter, returnContentSetter, url) => {
 }
 
 
-const DataGraph = () => {
+const DataGraph1 = () => {
   const [jsonData, setJsonData] = useState(null)
 
   let returnContent = <p>Loading...</p>;
@@ -485,41 +483,7 @@ const DataGraph2 = () => {
   )
 }
 
-
 const DataGraph3 = () => {
-  const [jsonData, setJsonData] = useState(null);
-
-  let returnContent = <p>Loading...</p>;
-  const setReturnContent = (content) =>{
-    returnContent = content;
-  };
-
-  useEffect(() => {
-    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data3');
-  }, []);
-
-  if (!jsonData) {
-    return <p>Loading...</p>;
-  }
-
-  return (
-    <CTableBody>
-      {jsonData.Developer.map((developer, index) => (
-        <CTableRow key={index}>
-          {/* Otras celdas de la tabla */}
-          <CTableDataCell>
-            <div>
-              {jsonData.Positive_rating_percentage[index]}%
-            </div>
-            <CProgress thin color="success" value={parseFloat(jsonData.Positive_rating_percentage[index])} />
-          </CTableDataCell>
-          {/* Otras celdas de la tabla */}
-        </CTableRow>
-      ))}
-    </CTableBody>
-  );
-};
-const DataGraph4 = () => {
   const [jsonData, setJsonData] = useState(null);
 
   let returnContent = <p>Loading...</p>;
@@ -578,7 +542,7 @@ const DataGraph5 = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch('http://127.0.0.1:8000/data8');
+        const response = await fetch('http://127.0.0.1:8000/data6');
         if (!response.ok) {
           throw new Error('Network response was not ok');
         }
