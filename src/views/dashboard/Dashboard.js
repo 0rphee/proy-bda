@@ -388,6 +388,7 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      <DataGraph7></DataGraph7>
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
@@ -547,7 +548,7 @@ const DataGraph6 = () => {
   }, []); // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
-    const resultData =  jsonData.slice(0, 25).map( (item) => {
+    const resultData =  jsonData.slice(0,25).map( (item) => {
           return {
             label: item.name,
             data: [ {
@@ -562,6 +563,67 @@ const DataGraph6 = () => {
     };
 
     returnContent = <CChart type="bubble" data={data} />;
+  }
+
+  return (
+    <div>
+      <h1>Top 10 Games by Avg_owners</h1>
+      {returnContent}
+    </div>
+  );
+};
+
+const DataGraph7 = () => {
+  const [jsonData, setJsonData] = useState(null);
+  const [hoveredBubble, setHoveredBubble] = useState(null); // Estado para almacenar la burbuja señalada
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) => {
+    returnContent = content;
+  };
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7');
+  }, []); // Empty dependency array ensures the effect runs only once
+
+  const handleBubbleHover = (event, item) => {
+    if (item.length > 0) {
+      // Si el cursor está sobre una burbuja
+      const datasetIndex = item[0].datasetIndex;
+      const index = item[0].index;
+      const label = jsonData[datasetIndex].name;
+      setHoveredBubble({ label, index }); // Establecer el estado con la etiqueta y el índice de la burbuja señalada
+    } else {
+      setHoveredBubble(null); // Si el cursor no está sobre una burbuja, restablecer el estado
+    }
+  };
+
+  if (jsonData) {
+    const resultData = jsonData.slice(0, 10).map((item) => {
+      return {
+        label: item.name,
+        data: [
+          {
+            x: item.appid,
+            y: item.average_playtime,
+            r: item.avg_owners / 10000, // Dividir por un factor para hacer los círculos más pequeños
+          },
+        ],
+      };
+    });
+    const data = {
+      datasets: resultData,
+    };
+
+    // Renderizar el contenido del gráfico dependiendo de si hay una burbuja señalada o no
+    returnContent = (
+      <div>
+        <CChart type="bubble" data={data} onHover={handleBubbleHover} />
+        {hoveredBubble && (
+          <p>Nombre: {jsonData[hoveredBubble.index].name}</p>
+        )}
+      </div>
+    );
   }
 
   return (
