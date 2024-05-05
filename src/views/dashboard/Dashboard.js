@@ -388,8 +388,8 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
-      <DataGraph7></DataGraph7>
       <DataGraph1></DataGraph1>
+      <DataGraph7></DataGraph7>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph6></DataGraph6>
@@ -429,22 +429,39 @@ const DataGraph1 = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    const options = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Developers"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Number of published games"
+          }
+        }
+      },
+    };
+
     const data = {
       labels: jsonData.Developer,
       datasets: [
         {
           data: jsonData.N_Games,
-          label: "Número de juegos publicados"
+          label: "Number of published games"
         }
       ],
     }
     
-    returnContent = <CChart type="bar" data={data} />;
+    returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
   return (
     <div>
-      <h1>Top 10 Developers </h1>
+      <h1>Top 10 Developers (by # of published games)</h1>
       {returnContent}
     </div>
   )
@@ -463,22 +480,38 @@ const DataGraph2 = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    const options = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Publishers"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Number of published games"
+          }
+        }
+      },
+    };
     const data = {
       labels: jsonData.Publisher,
       datasets: [
         {
           data: jsonData.N_Games,
-          label: "Número de juegos publicados"
+          label: "Number of published games"
         }
       ],
     }
     
-    returnContent = <CChart type="bar" data={data} />;
+    returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
   return (
     <div>
-      <h1>Top 10 Publishers </h1>
+      <h1>Top 10 Publishers (by # of published games)</h1>
       {returnContent}
     </div>
   )
@@ -564,15 +597,15 @@ const DataGraph6 = () => {
         x: {
           title: {
             display: true,
-            text: "% of Positive ratings"
+            text: "Price (USD)"
           }
         },
         y: {
           title: {
             display: true,
-            text: "Price (USD)"
+            text: "% of Positive reviews"
           }
-        }
+        },
       },
 
       plugins: {
@@ -604,7 +637,7 @@ const DataGraph6 = () => {
 
   return (
     <div>
-      <h1>Top 10 Games by Avg_owners</h1>
+      <h1>Top 100 Games by average # of owners, price and % of positive reviews</h1>
       {returnContent}
     </div>
   );
@@ -700,7 +733,7 @@ const DataGraph7 = () => {
 
   return (
     <div>
-      <h1>Top 10 Games by Avg_owners</h1>
+      <h1>Top 100 Games by average total playtime (per player)</h1>
       {returnContent}
     </div>
   );
