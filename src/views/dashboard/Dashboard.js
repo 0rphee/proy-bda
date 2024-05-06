@@ -97,11 +97,15 @@ const Dashboard = () => {
         <p></p>
       </div>
       <WidgetsBrand className="mb-4" withCharts />
-      <div className="row">
+      <CRow>
+    <CCol xs={6}>
       <DataGraph5 />
+    </CCol>
+    <CCol xs={6}>
       <DataGraph5_1 />
-    </div>
-      <DualDataGraphs></DualDataGraphs>
+    </CCol>
+  </CRow>
+      
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
@@ -376,26 +380,23 @@ const DataGraph5 = () => {
       ],
     }
     returnContent = (
-      <CCol xs={6}>
         <CCard className="mb-4">
           <CCardHeader>Pie Chart</CCardHeader>
           <CCardBody>
             <CChartPie data={data} />
           </CCardBody>
         </CCard>
-      </CCol>
       
     );
   }
 
   return (
     <div>
-      <h1> #juegos que son aceptados en plataforma y #usuarios son dueños de un juego</h1>
+      <h1> prueba1</h1>
       {returnContent}
     </div>
   );
 };
-
 
 const DataGraph5_1 = () => {
   const [jsonData, setJsonData] = useState(null);
@@ -421,30 +422,21 @@ const DataGraph5_1 = () => {
     };
 
     returnContent = (
-      <CCol xs={6}>
-        <CCard className="mb-4">
+      
+      <CCard className="mb-4">
           <CCardHeader>Pie Chart</CCardHeader>
           <CCardBody>
             <CChartPie data={data} />
           </CCardBody>
         </CCard>
-      </CCol>
+      
     );
   }
 
   return (
     <div>
-      <h1> prueba</h1>
+      <h1> prueba2</h1>
       {returnContent}
-    </div>
-  );
-};
-
-const DualDataGraphs = () => {
-  return (
-    <div className="row">
-      <DataGraph5 />
-      <DataGraph5_1 />
     </div>
   );
 };
@@ -601,5 +593,6 @@ const DataGraph7 = () => {
     </div>
   );
 };
+
 
 export default Dashboard
