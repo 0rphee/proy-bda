@@ -431,17 +431,18 @@ const DataGraph1 = () => {
 
   if (jsonData) {
     const options = {
+      indexAxis: 'y',
       scales: {
         x: {
           title: {
             display: true,
-            text: "Developers"
+            text: "Number of published games"
           }
         },
         y: {
           title: {
             display: true,
-            text: "Number of published games"
+            text: "Developers"
           }
         }
       },
