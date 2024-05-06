@@ -1,8 +1,8 @@
 import { React, useState, useEffect } from 'react'
+import { Chart } from 'chart.js/auto'
 import { Bar, Bubble } from 'react-chartjs-2'
 import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
-
 
 import {
   CAvatar,
@@ -97,15 +97,12 @@ const Dashboard = () => {
         <p></p>
       </div>
       <WidgetsBrand className="mb-4" withCharts />
-      <DataGraph14></DataGraph14>
-      <DataGraph13></DataGraph13>
-      <DataGraph7></DataGraph7>
       <DataGraph1></DataGraph1>
-      <DataGraph7></DataGraph7>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph6></DataGraph6>
       <DataGraph4></DataGraph4>
+      <DataGraph7></DataGraph7>
       
     </>
   )
@@ -338,7 +335,8 @@ const DataGraph4 = () => {
       ],
     }
 
-    returnContent = <CChart type="bar" options={options} data={data} />;
+    returnContent = <Bar options={options} data={data} />;
+    // returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
   return (
@@ -414,6 +412,7 @@ const DataGraph6 = () => {
     };
 
     returnContent = <Bubble options={options} data={data} />;
+    // returnContent = <CChart type="bubble" options={options} data={data} />;
   }
 
   return (
@@ -454,13 +453,13 @@ const DataGraph7 = () => {
         y: {
           title: {
             display: true,
-            text: "Average total playtime (min)"
+            text: "Average total playtime (min)",
           }
         },
         x: {
           title: {
             display: true,
-            text: "Average # of owners"
+            text: "Average # of owners",
           }
         }
       },
@@ -473,7 +472,7 @@ const DataGraph7 = () => {
         tooltip: {
           callbacks: {
             label: (tooltipItem) => {
-              return `${tooltipItem.dataset.label}:`;
+              return tooltipItem.dataset.label;
             },
             afterLabel: (tooltipItem) => {
               const y = "(y) Average total playtime (min): " + tooltipItem.dataset.data[0].x.toLocaleString();
@@ -489,11 +488,8 @@ const DataGraph7 = () => {
     };
 
     // Renderizar el contenido del gráfico dependiendo de si hay una burbuja señalada o no
-    returnContent = (
-      <div>
-        <Bubble options={options} data={data} />
-      </div>
-    );
+    returnContent = <Bubble options={options} data={data} />;
+    // returnContent = <CChart type="bubble" options={options} data={data} />;
   }
 
   return (
@@ -504,108 +500,4 @@ const DataGraph7 = () => {
   );
 };
 
-const DataGraph13 = () => {
-  const [jsonData, setJsonData] = useState(null);
-
-  let returnContent = <p>Loading...</p>;
-  const setReturnContent = (content) => {
-    returnContent = content;
-  };
-
-  useEffect(() => {
-    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7'); // data7 es a propósito
-  }, []);
-
-    if (jsonData) {
-      const progressGroupData = jsonData.filter(item => item.name.includes("name")).map(item => ({
-        title: item.name,
-        value1: item.average_playtime,
-        value2: item.avg_owners
-      }));
-
-      returnContent = (
-        <>
-          {progressGroupData.map((item, index) => (
-            <div className="progress-group mb-4" key={index}>
-              <div className="progress-group-prepend">
-                <span className="text-body-secondary small">{item.name}</span>
-              </div>
-              <div className="progress-group-bars">
-                <CProgress thin color="info" value={item.value1} />
-                <CProgress thin color="danger" value={item.value2} />
-              </div>
-            </div>
-          ))}
-        </>
-      );
-    }
-
-  return (
-    <div>
-      <h1>Progress Groups</h1>
-      {returnContent}
-    </div>
-  );
-}
-
-
-const DataGraph14 = () => {
-  const [jsonData, setJsonData] = useState(null);
-
-  let returnContent = <p>Loading...</p>;
-  const setReturnContent = (content) => {
-    returnContent = content;
-  };
-
-  useEffect(() => {
-    fetchData(setJsonData,setReturnContent, 'http://127.0.0.1:8000/data7');
-  }, []);
-
-  if (jsonData) {
-    const chartData = {
-      labels: jsonData.map(entry => entry.name),
-      datasets: [
-        {
-          label: 'Average Playtime',
-          backgroundColor: 'rgba(75,192,192,0.4)',
-          borderColor: 'rgba(75,192,192,1)',
-          borderWidth: 2,
-          data: jsonData.map(entry => entry.average_playtime)
-        },
-        {
-          label: 'Average Owners',
-          backgroundColor: 'rgba(255,99,132,0.4)',
-          borderColor: 'rgba(255,99,132,1)',
-          borderWidth: 2,
-          data: jsonData.map(entry => entry.avg_owners)
-        }
-      ]
-    };
-
-    const chartOptions = {
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          display: true,
-          position: 'top'
-        }
-      }
-    };
-
-    returnContent = (
-      <CChart type="line"
-        style={{ height: '300px', marginTop: '40px' }}
-        datasets={chartData}
-        options={chartOptions}
-      />
-    )
-  }
-
-  return (
-    <div>
-      <h2 className="text-center mb-4">Average Playtime and Average Owners</h2>
-      {returnContent}
-    </div>
-  );
-};
 export default Dashboard
