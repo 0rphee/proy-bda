@@ -570,7 +570,7 @@ const DataGraph3 = () => {
 
   return (
     <div>
-      <h2 className="text-center mb-4">Top 10 best positive ratings</h2>
+      <h2 className="text-center mb-4">Top 10 most rated games</h2>
       {returnContent}
     </div>
   );
