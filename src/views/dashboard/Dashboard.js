@@ -1,20 +1,15 @@
 import { React, useState, useEffect } from 'react'
 import { Chart } from 'chart.js/auto'
 import { Bar, Bubble } from 'react-chartjs-2'
-import { CChart, CChartPie } from '@coreui/react-chartjs'
+import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
 import {
-  CAvatar,
-  CButton,
-  CButtonGroup,
   CCard,
   CCardBody,
-  CCardFooter,
   CCardHeader,
   CCol,
   CProgress,
-  CProgressStacked,
   CRow,
   CTable,
   CTableBody,
@@ -24,31 +19,6 @@ import {
   CTableRow,
   CWidgetStatsD
 } from '@coreui/react'
-import CIcon from '@coreui/icons-react'
-import {
-  cibCcAmex,
-  cibCcApplePay,
-  cibCcMastercard,
-  cibCcPaypal,
-  cibCcStripe,
-  cibCcVisa,
-  cibGoogle,
-  cibFacebook,
-  cibLinkedin,
-  cifMx,
-  cibTwitter,
-  cilCloudDownload,
-  cilPeople,
-  cilUser,
-  cilUserFemale,
-} from '@coreui/icons'
-
-import avatar1 from 'src/assets/images/avatars/1.jpg'
-import avatar2 from 'src/assets/images/avatars/2.jpg'
-import avatar3 from 'src/assets/images/avatars/3.jpg'
-import avatar4 from 'src/assets/images/avatars/4.jpg'
-import avatar5 from 'src/assets/images/avatars/5.jpg'
-import avatar6 from 'src/assets/images/avatars/6.jpg'
 
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
 import { json } from 'react-router-dom'
@@ -65,10 +35,20 @@ const Dashboard = () => {
       <DataGraph15 withCharts={true} ></DataGraph15>
       <CRow>
         <CCol xs={6}>
-          <DataGraph5 />
+          <CCard className="mb-4">
+            <CCardHeader>Games by platform</CCardHeader>
+            <CCardBody>
+              <DataGraph5 />
+            </CCardBody>
+          </CCard>
         </CCol>
         <CCol xs={6}>
-          <DataGraph5_1 />
+          <CCard className="mb-4">
+            <CCardHeader>Mamma mia</CCardHeader>
+            <CCardBody>
+              {false ? <DataGraph7 /> : <DataGraph5_1 />}
+            </CCardBody>
+          </CCard>
         </CCol>
       </CRow>
       
@@ -345,23 +325,10 @@ const DataGraph5 = () => {
         },
       ],
     }
-    returnContent = (
-        <CCard className="mb-4">
-          <CCardHeader>Pie Chart</CCardHeader>
-          <CCardBody>
-            <CChartPie data={data} />
-          </CCardBody>
-        </CCard>
-      
-    );
+    returnContent = <CChart type="polarArea" data={data} />;
   }
 
-  return (
-    <div>
-      <h1> prueba1</h1>
-      {returnContent}
-    </div>
-  );
+  return returnContent;
 };
 
 const DataGraph5_1 = () => {
@@ -387,24 +354,10 @@ const DataGraph5_1 = () => {
       ],
     };
 
-    returnContent = (
-      
-      <CCard className="mb-4">
-          <CCardHeader>Pie Chart</CCardHeader>
-          <CCardBody>
-            <CChartPie data={data} />
-          </CCardBody>
-        </CCard>
-      
-    );
+    returnContent = <CChart type="polarArea" data={data} />;
   }
 
-  return (
-    <div>
-      <h1> prueba2</h1>
-      {returnContent}
-    </div>
-  );
+  return returnContent;
 };
 
 const DataGraph6 = () => {
@@ -604,7 +557,7 @@ const DataGraph15 = (props) => {
 
   return (
     <div>
-      <h1>Categories Widget</h1>
+      <h1>Category information</h1>
       {returnContent}
     </div>
   );
