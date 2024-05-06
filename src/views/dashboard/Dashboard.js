@@ -100,6 +100,8 @@ const Dashboard = () => {
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
+      <DataGraph4></DataGraph4>
+      <DataGraph5></DataGraph5>
       <DataGraph6></DataGraph6>
       <DataGraph4></DataGraph4>
       <DataGraph7></DataGraph7>
@@ -346,6 +348,61 @@ const DataGraph4 = () => {
     </div>
   )
 }
+
+const DataGraph5 = () => {
+  const [pieChartData, setPieChartData] = useState(null);
+  const [jsonData, setJsonData] = useState(null);
+
+  const fetchData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/data5');
+      const data = await response.json();
+      setJsonData(data);
+    } catch (error) {
+      console.error('Error fetching data:', error);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    if (jsonData) {
+      const labels = jsonData.platform;
+      const data = jsonData.platform_count;
+      const backgroundColor = ['#FF6384', '#36A2EB', '#FFCE56']; // Define your own colors as needed
+
+      setPieChartData({
+        labels,
+        datasets: [
+          {
+            data,
+            backgroundColor,
+            hoverBackgroundColor: backgroundColor,
+          },
+        ],
+      });
+    }
+  }, [jsonData]);
+
+  let returnContent = <p>Loading...</p>;
+
+  if (pieChartData) {
+    returnContent = (
+      <CCol xs={6}>
+        <CCard className="mb-4">
+          <CCardHeader>Pie Chart</CCardHeader>
+          <CCardBody>
+            <CChartPie data={pieChartData} />
+          </CCardBody>
+        </CCard>
+      </CCol>
+    );
+  }
+
+  return returnContent;
+};
 
 const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
