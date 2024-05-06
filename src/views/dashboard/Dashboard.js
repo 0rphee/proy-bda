@@ -50,45 +50,10 @@ import avatar4 from 'src/assets/images/avatars/4.jpg'
 import avatar5 from 'src/assets/images/avatars/5.jpg'
 import avatar6 from 'src/assets/images/avatars/6.jpg'
 
-import WidgetsBrand from '../widgets/WidgetsBrand'
 import WidgetsDropdown from '../widgets/WidgetsDropdown'
-import MainChart from './MainChart'
 import { json } from 'react-router-dom'
 
 const Dashboard = () => {
-  const progressExample = [
-    { title: 'Visits', value: '29.703 Users', percent: 40, color: 'success' },
-    { title: 'Unique', value: '24.093 Users', percent: 20, color: 'info' },
-    { title: 'Pageviews', value: '78.706 Views', percent: 60, color: 'warning' },
-    { title: 'New Users', value: '22.123 Users', percent: 80, color: 'danger' },
-    { title: 'Bounce Rate', value: 'Average Rate', percent: 40.15, color: 'primary' },
-  ]
-
-  const progressGroupExample1 = [
-    { title: 'The Abbey of Crime Extensum', value1: 190625, value2: 75000 },
-    { title: 'The Banner Saga: Factions', value1: 95245, value2: 350000 },
-    { title: 'The Secret of Tremendous Corporation', value1: 95242, value2: 150000 },
-    { title: 'PRICE', value1: 63481, value2: 350000 },
-    { title: 'Boundless', value1: 55204, value2: 35000 },
-    { title: 'Shroud of the Avatar: Forsaken Virtues', value1: 54618, value2: 75000 },
-    { title: 'X-Plane 11', value1: 44169, value2: 150000 },
-    { title: 'nan', value1: 43632, value2: 35000 },
-    { title: 'Fantasy Grounds', value1: 43074, value2: 35000 },
-    { title: 'Screeps', value1: 38805, value2: 35000 }
-  ]
-  
-
-  const progressGroupExample2 = [
-    { title: 'Male', icon: cilUser, value: 53 },
-    { title: 'Female', icon: cilUserFemale, value: 43 },
-  ]
-
-  const progressGroupExample3 = [
-    { title: 'Organic Search', icon: cibGoogle, percent: 56, value: '191,235' },
-    { title: 'Facebook', icon: cibFacebook, percent: 15, value: '51,223' },
-    { title: 'Twitter', icon: cibTwitter, percent: 11, value: '37,564' },
-    { title: 'LinkedIn', icon: cibLinkedin, percent: 8, value: '27,319' },
-  ]
 
   return (
     <>
@@ -98,15 +63,14 @@ const Dashboard = () => {
         <p></p>
       </div>
       <DataGraph15 withCharts={true} ></DataGraph15>
-      <WidgetsBrand className="mb-4" withCharts />
       <CRow>
-    <CCol xs={6}>
-      <DataGraph5 />
-    </CCol>
-    <CCol xs={6}>
-      <DataGraph5_1 />
-    </CCol>
-  </CRow>
+        <CCol xs={6}>
+          <DataGraph5 />
+        </CCol>
+        <CCol xs={6}>
+          <DataGraph5_1 />
+        </CCol>
+      </CRow>
       
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
