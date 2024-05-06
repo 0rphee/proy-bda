@@ -33,12 +33,6 @@ import {
   cibGoogle,
   cibFacebook,
   cibLinkedin,
-  cifBr,
-  cifEs,
-  cifFr,
-  cifIn,
-  cifPl,
-  cifUs,
   cifMx,
   cibTwitter,
   cilCloudDownload,
@@ -69,14 +63,18 @@ const Dashboard = () => {
   ]
 
   const progressGroupExample1 = [
-    { title: 'Monday', value1: 34, value2: 78 },
-    { title: 'Tuesday', value1: 56, value2: 94 },
-    { title: 'Wednesday', value1: 12, value2: 67 },
-    { title: 'Thursday', value1: 43, value2: 91 },
-    { title: 'Friday', value1: 22, value2: 73 },
-    { title: 'Saturday', value1: 53, value2: 82 },
-    { title: 'Sunday', value1: 9, value2: 69 },
+    { title: 'The Abbey of Crime Extensum', value1: 190625, value2: 75000 },
+    { title: 'The Banner Saga: Factions', value1: 95245, value2: 350000 },
+    { title: 'The Secret of Tremendous Corporation', value1: 95242, value2: 150000 },
+    { title: 'PRICE', value1: 63481, value2: 350000 },
+    { title: 'Boundless', value1: 55204, value2: 35000 },
+    { title: 'Shroud of the Avatar: Forsaken Virtues', value1: 54618, value2: 75000 },
+    { title: 'X-Plane 11', value1: 44169, value2: 150000 },
+    { title: 'nan', value1: 43632, value2: 35000 },
+    { title: 'Fantasy Grounds', value1: 43074, value2: 35000 },
+    { title: 'Screeps', value1: 38805, value2: 35000 }
   ]
+  
 
   const progressGroupExample2 = [
     { title: 'Male', icon: cilUser, value: 53 },
@@ -262,6 +260,7 @@ const Dashboard = () => {
                       </div>
                     </CCol>
                   </CRow>
+
                   <hr className="mt-0" />
                   {progressGroupExample1.map((item, index) => (
                     <div className="progress-group mb-4" key={index}>
@@ -274,6 +273,7 @@ const Dashboard = () => {
                       </div>
                     </div>
                   ))}
+
                 </CCol>
                 <CCol xs={12} md={6} xl={6}>
                   <CRow>
@@ -388,6 +388,9 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
+      
+      <DataGraph14></DataGraph14>
+      <DataGraph13></DataGraph13>
       <DataGraph7></DataGraph7>
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
@@ -397,8 +400,6 @@ const Dashboard = () => {
     </>
   )
 }
-
-
 
 const fetchData = async (jsonDataSetter, returnContentSetter, url) => {
   try {
@@ -414,7 +415,6 @@ const fetchData = async (jsonDataSetter, returnContentSetter, url) => {
     returnContentSetter(<p>{errMsg}</p>);
   }
 }
-
 
 const DataGraph1 = () => {
   const [jsonData, setJsonData] = useState(null)
@@ -534,7 +534,6 @@ const DataGraph3 = () => {
   );
 };
 
-
 const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
 
@@ -599,12 +598,12 @@ const DataGraph7 = () => {
   };
 
   if (jsonData) {
-    const resultData = jsonData.slice(0, 10).map((item) => {
+    const resultData = jsonData.slice(0, 10).map((item, index) => {
       return {
         label: item.name,
         data: [
           {
-            x: item.appid,
+            x: index + 1 + ": " + item.name,
             y: item.average_playtime,
             r: item.avg_owners / 10000, // Dividir por un factor para hacer los círculos más pequeños
           },
@@ -634,4 +633,100 @@ const DataGraph7 = () => {
   );
 };
 
+const DataGraph13 = () => {
+  const [jsonData, setJsonData] = useState(null);
+
+  let returnContent = <p>Loading...</p>;
+
+  useEffect(() => {
+    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+  }, []);
+
+  useEffect(() => {
+    if (jsonData) {
+      const progressGroupData = jsonData.filter(item => item.title.includes("name")).map(item => ({
+        title: item.title,
+        value1: item.average_playtime,
+        value2: item.avg_owners
+      }));
+
+      returnContent = (
+        <>
+          {progressGroupData.map((item, index) => (
+            <div className="progress-group mb-4" key={index}>
+              <div className="progress-group-prepend">
+                <span className="text-body-secondary small">{item.title}</span>
+              </div>
+              <div className="progress-group-bars">
+                <CProgress thin color="info" value={item.value1} />
+                <CProgress thin color="danger" value={item.value2} />
+              </div>
+            </div>
+          ))}
+        </>
+      );
+    }
+  }, [jsonData]);
+
+  return (
+    <div>
+      <h1>Progress Groups</h1>
+      {returnContent}
+    </div>
+  );
+}
+
+
+const DataGraph14 = () => {
+  const [jsonData, setJsonData] = useState(null);
+
+  useEffect(() => {
+    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+  }, []);
+
+  if (!jsonData) {
+    return <p>Loading...</p>;
+  }
+
+  const chartData = {
+    labels: jsonData.map(entry => entry.name),
+    datasets: [
+      {
+        label: 'Average Playtime',
+        backgroundColor: 'rgba(75,192,192,0.4)',
+        borderColor: 'rgba(75,192,192,1)',
+        borderWidth: 2,
+        data: jsonData.map(entry => entry.average_playtime)
+      },
+      {
+        label: 'Average Owners',
+        backgroundColor: 'rgba(255,99,132,0.4)',
+        borderColor: 'rgba(255,99,132,1)',
+        borderWidth: 2,
+        data: jsonData.map(entry => entry.avg_owners)
+      }
+    ]
+  };
+
+  const chartOptions = {
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        display: true,
+        position: 'top'
+      }
+    }
+  };
+
+  return (
+    <div>
+      <h2 className="text-center mb-4">Average Playtime and Average Owners</h2>
+      <CChartLine
+        style={{ height: '300px', marginTop: '40px' }}
+        datasets={chartData.datasets}
+        options={chartOptions}
+      />
+    </div>
+  );
+};
 export default Dashboard
