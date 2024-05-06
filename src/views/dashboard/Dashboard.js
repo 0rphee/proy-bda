@@ -652,7 +652,6 @@ const DataGraph6 = () => {
 
 const DataGraph7 = () => {
   const [jsonData, setJsonData] = useState(null);
-  const [hoveredBubble, setHoveredBubble] = useState(null); // Estado para almacenar la burbuja señalada
 
   let returnContent = <p>Loading...</p>;
   const setReturnContent = (content) => {
@@ -662,18 +661,6 @@ const DataGraph7 = () => {
   useEffect(() => {
     fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7');
   }, []); // Empty dependency array ensures the effect runs only once
-
-  const handleBubbleHover = (event, item) => {
-    if (item.length > 0) {
-      // Si el cursor está sobre una burbuja
-      const datasetIndex = item[0].datasetIndex;
-      const index = item[0].index;
-      const label = jsonData[datasetIndex].name;
-      setHoveredBubble({ label, index }); // Establecer el estado con la etiqueta y el índice de la burbuja señalada
-    } else {
-      setHoveredBubble(null); // Si el cursor no está sobre una burbuja, restablecer el estado
-    }
-  };
 
   if (jsonData) {
     const resultData = jsonData.map((item) => {
@@ -730,10 +717,7 @@ const DataGraph7 = () => {
     // Renderizar el contenido del gráfico dependiendo de si hay una burbuja señalada o no
     returnContent = (
       <div>
-        <Bubble options={options} data={data} onHover={handleBubbleHover} />
-        {hoveredBubble && (
-          <p>Nombre: {jsonData[hoveredBubble.index].name}</p>
-        )}
+        <Bubble options={options} data={data} />
       </div>
     );
   }
