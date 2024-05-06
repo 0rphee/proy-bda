@@ -530,40 +530,47 @@ const DataGraph3 = () => {
     fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data3');
   }, []);
 
-  if (!jsonData) {
-    return <p>Loading...</p>;
+  if (jsonData) {
+    returnContent = ( 
+      <CTable align="middle" className="mb-0 border" hover responsive>
+        <CTableHead className="text-nowrap">
+          <CTableRow>
+          <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">Positive Rating Percentage</CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">Total Ratings</CTableHeaderCell>
+          </CTableRow>
+        </CTableHead>
+        <CTableBody>
+          {jsonData.Developer.map((developer, index) => {
+            const positive_rating_percentage = parseFloat(jsonData.Positive_rating_percentage[index]);
+            const total_ratings = Number(jsonData.Total_ratings[index]).toLocaleString();
+
+            return (
+            <CTableRow key={index}>
+              <CTableDataCell>
+                <div>{developer}</div>
+              </CTableDataCell>
+              <CTableDataCell>
+                <div>
+                  {positive_rating_percentage.toFixed(2)}%
+                </div>
+                <CProgress thin color="success" value={positive_rating_percentage} />
+              </CTableDataCell>
+              <CTableDataCell>
+                <div>{total_ratings}</div>
+              </CTableDataCell>
+            </CTableRow>
+          );
+        })}
+        </CTableBody>
+      </CTable>
+    )
   }
 
   return (
     <div>
       <h2 className="text-center mb-4">Top 10 best positive ratings</h2>
-    <CTable align="middle" className="mb-0 border" hover responsive>
-      <CTableHead className="text-nowrap">
-        <CTableRow>
-        <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
-        <CTableHeaderCell className="bg-body-tertiary">Positive Rating Percentage</CTableHeaderCell>
-        <CTableHeaderCell className="bg-body-tertiary">Total Ratings</CTableHeaderCell>
-        </CTableRow>
-      </CTableHead>
-      <CTableBody>
-        {jsonData.Developer.map((developer, index) => (
-          <CTableRow key={index}>
-            <CTableDataCell>
-              <div>{developer}</div>
-            </CTableDataCell>
-            <CTableDataCell>
-              <div>
-                {jsonData.Positive_rating_percentage[index]}%
-              </div>
-              <CProgress thin color="success" value={parseFloat(jsonData.Positive_rating_percentage[index])} />
-            </CTableDataCell>
-            <CTableDataCell>
-              <div>{jsonData.Total_ratings[index]}</div>
-            </CTableDataCell>
-          </CTableRow>
-        ))}
-      </CTableBody>
-    </CTable>
+      {returnContent}
     </div>
   );
 };
