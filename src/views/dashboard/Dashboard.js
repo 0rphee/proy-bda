@@ -14,6 +14,7 @@ import {
   CCardHeader,
   CCol,
   CProgress,
+  CProgressStacked,
   CRow,
   CTable,
   CTableBody,
@@ -102,6 +103,7 @@ const Dashboard = () => {
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph6></DataGraph6>
+      <DataGraph4></DataGraph4>
       
     </>
   )
@@ -135,6 +137,24 @@ const DataGraph1 = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    const options = {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Number of published games"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Developers"
+          }
+        }
+      },
+    };
+
     const data = {
       labels: jsonData.Developer,
       datasets: [
@@ -202,43 +222,114 @@ const DataGraph3 = () => {
     fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data3');
   }, []);
 
-  if (!jsonData) {
-    return <p>Loading...</p>;
+  if (jsonData) {
+    returnContent = ( 
+      <CTable align="middle" className="mb-0 border" hover responsive>
+        <CTableHead className="text-nowrap">
+          <CTableRow>
+          <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">Positive Rating Percentage</CTableHeaderCell>
+          <CTableHeaderCell className="bg-body-tertiary">Total Ratings</CTableHeaderCell>
+          </CTableRow>
+        </CTableHead>
+        <CTableBody>
+          {jsonData.Developer.map((developer, index) => {
+            const positive_rating_percentage = parseFloat(jsonData.Positive_rating_percentage[index]);
+            const total_ratings = Number(jsonData.Total_ratings[index]).toLocaleString();
+
+            return (
+            <CTableRow key={index}>
+              <CTableDataCell>
+                <div>{developer}</div>
+              </CTableDataCell>
+              <CTableDataCell>
+                <div>
+                  {positive_rating_percentage.toFixed(2)}%
+                </div>
+                <CProgress thin color="success" value={positive_rating_percentage} />
+              </CTableDataCell>
+              <CTableDataCell>
+                <div>{total_ratings}</div>
+              </CTableDataCell>
+            </CTableRow>
+          );
+        })}
+        </CTableBody>
+      </CTable>
+    )
   }
 
   return (
     <div>
-      <h2 className="text-center mb-4">Top 10 best positive ratings</h2>
-    <CTable align="middle" className="mb-0 border" hover responsive>
-      <CTableHead className="text-nowrap">
-        <CTableRow>
-        <CTableHeaderCell className="bg-body-tertiary">Developer</CTableHeaderCell>
-        <CTableHeaderCell className="bg-body-tertiary">Positive Rating Percentage</CTableHeaderCell>
-        <CTableHeaderCell className="bg-body-tertiary">Total Ratings</CTableHeaderCell>
-        </CTableRow>
-      </CTableHead>
-      <CTableBody>
-        {jsonData.Developer.map((developer, index) => (
-          <CTableRow key={index}>
-            <CTableDataCell>
-              <div>{developer}</div>
-            </CTableDataCell>
-            <CTableDataCell>
-              <div>
-                {jsonData.Positive_rating_percentage[index]}%
-              </div>
-              <CProgress thin color="success" value={parseFloat(jsonData.Positive_rating_percentage[index])} />
-            </CTableDataCell>
-            <CTableDataCell>
-              <div>{jsonData.Total_ratings[index]}</div>
-            </CTableDataCell>
-          </CTableRow>
-        ))}
-      </CTableBody>
-    </CTable>
+      <h2 className="text-center mb-4">Top 10 most rated games</h2>
+      {returnContent}
     </div>
   );
 };
+
+const DataGraph4 = () => {
+  const [jsonData, setJsonData] = useState(null)
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data4');
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const options = {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "# of games by genre"
+          }
+        },
+        x2: {
+          title: {
+            display: true,
+            text: "Average owners by genre"
+          }
+        },
+
+        y: {
+          title: {
+            display: true,
+            text: "Genres"
+          }
+        },
+      },
+    };
+    const data = {
+      labels: jsonData.genre,
+      datasets: [
+        {
+          data: jsonData.genre_count,
+          label: "# of games by genre",
+          xAxisID: "x",
+        },
+        {
+          data: jsonData.avg_owners_per_genre,
+          label: "Average owners by genre",
+          xAxisID: "x2",
+        }
+      ],
+    }
+
+    returnContent = <CChart type="bar" options={options} data={data} />;
+  }
+
+  return (
+    <div>
+      <h1>Number of games published by genre and their average number of owners</h1>
+      {returnContent}
+    </div>
+  )
+}
 
 const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
@@ -280,7 +371,6 @@ const DataGraph6 = () => {
 
 const DataGraph7 = () => {
   const [jsonData, setJsonData] = useState(null);
-  const [hoveredBubble, setHoveredBubble] = useState(null); // Estado para almacenar la burbuja señalada
 
   let returnContent = <p>Loading...</p>;
   const setReturnContent = (content) => {
@@ -290,18 +380,6 @@ const DataGraph7 = () => {
   useEffect(() => {
     fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7');
   }, []); // Empty dependency array ensures the effect runs only once
-
-  const handleBubbleHover = (event, item) => {
-    if (item.length > 0) {
-      // Si el cursor está sobre una burbuja
-      const datasetIndex = item[0].datasetIndex;
-      const index = item[0].index;
-      const label = jsonData[datasetIndex].name;
-      setHoveredBubble({ label, index }); // Establecer el estado con la etiqueta y el índice de la burbuja señalada
-    } else {
-      setHoveredBubble(null); // Si el cursor no está sobre una burbuja, restablecer el estado
-    }
-  };
 
   if (jsonData) {
     const resultData = jsonData.slice(0, 10).map((item, index) => {
@@ -323,10 +401,7 @@ const DataGraph7 = () => {
     // Renderizar el contenido del gráfico dependiendo de si hay una burbuja señalada o no
     returnContent = (
       <div>
-        <CChart type="bubble" data={data} onHover={handleBubbleHover} />
-        {hoveredBubble && (
-          <p>Nombre: {jsonData[hoveredBubble.index].name}</p>
-        )}
+        <Bubble options={options} data={data} />
       </div>
     );
   }
@@ -343,15 +418,17 @@ const DataGraph13 = () => {
   const [jsonData, setJsonData] = useState(null);
 
   let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) => {
+    returnContent = content;
+  };
 
   useEffect(() => {
-    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7'); // data7 es a propósito
   }, []);
 
-  useEffect(() => {
     if (jsonData) {
-      const progressGroupData = jsonData.filter(item => item.title.includes("name")).map(item => ({
-        title: item.title,
+      const progressGroupData = jsonData.filter(item => item.name.includes("name")).map(item => ({
+        title: item.name,
         value1: item.average_playtime,
         value2: item.avg_owners
       }));
@@ -361,7 +438,7 @@ const DataGraph13 = () => {
           {progressGroupData.map((item, index) => (
             <div className="progress-group mb-4" key={index}>
               <div className="progress-group-prepend">
-                <span className="text-body-secondary small">{item.title}</span>
+                <span className="text-body-secondary small">{item.name}</span>
               </div>
               <div className="progress-group-bars">
                 <CProgress thin color="info" value={item.value1} />
@@ -372,7 +449,6 @@ const DataGraph13 = () => {
         </>
       );
     }
-  }, [jsonData]);
 
   return (
     <div>
@@ -386,52 +462,59 @@ const DataGraph13 = () => {
 const DataGraph14 = () => {
   const [jsonData, setJsonData] = useState(null);
 
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) => {
+    returnContent = content;
+  };
+
   useEffect(() => {
-    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+    fetchData(setJsonData,setReturnContent, 'http://127.0.0.1:8000/data7');
   }, []);
 
-  if (!jsonData) {
-    return <p>Loading...</p>;
+  if (jsonData) {
+    const chartData = {
+      labels: jsonData.map(entry => entry.name),
+      datasets: [
+        {
+          label: 'Average Playtime',
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          borderColor: 'rgba(75,192,192,1)',
+          borderWidth: 2,
+          data: jsonData.map(entry => entry.average_playtime)
+        },
+        {
+          label: 'Average Owners',
+          backgroundColor: 'rgba(255,99,132,0.4)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 2,
+          data: jsonData.map(entry => entry.avg_owners)
+        }
+      ]
+    };
+
+    const chartOptions = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    };
+
+    returnContent = (
+      <CChart type="line"
+        style={{ height: '300px', marginTop: '40px' }}
+        datasets={chartData}
+        options={chartOptions}
+      />
+    )
   }
-
-  const chartData = {
-    labels: jsonData.map(entry => entry.name),
-    datasets: [
-      {
-        label: 'Average Playtime',
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderWidth: 2,
-        data: jsonData.map(entry => entry.average_playtime)
-      },
-      {
-        label: 'Average Owners',
-        backgroundColor: 'rgba(255,99,132,0.4)',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 2,
-        data: jsonData.map(entry => entry.avg_owners)
-      }
-    ]
-  };
-
-  const chartOptions = {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top'
-      }
-    }
-  };
 
   return (
     <div>
       <h2 className="text-center mb-4">Average Playtime and Average Owners</h2>
-      <CChartLine
-        style={{ height: '300px', marginTop: '40px' }}
-        datasets={chartData.datasets}
-        options={chartOptions}
-      />
+      {returnContent}
     </div>
   );
 };
