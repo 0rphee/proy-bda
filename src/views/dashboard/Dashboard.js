@@ -1,5 +1,5 @@
 import { React, useState, useEffect } from 'react'
-// import { Bar } from 'react-chartjs-2'
+import { Bar, Bubble } from 'react-chartjs-2'
 import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
@@ -97,9 +97,11 @@ const Dashboard = () => {
         <p></p>
       </div>
       <WidgetsBrand className="mb-4" withCharts />
+      <DataGraph14></DataGraph14>
       <DataGraph13></DataGraph13>
       <DataGraph7></DataGraph7>
       <DataGraph1></DataGraph1>
+      <DataGraph7></DataGraph7>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph6></DataGraph6>
@@ -160,17 +162,17 @@ const DataGraph1 = () => {
       datasets: [
         {
           data: jsonData.N_Games,
-          label: "Número de juegos publicados"
+          label: "Number of published games"
         }
       ],
     }
     
-    returnContent = <CChart type="bar" data={data} />;
+    returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
   return (
     <div>
-      <h1>Top 10 Developers </h1>
+      <h1>Top 10 Developers (by # of published games)</h1>
       {returnContent}
     </div>
   )
@@ -189,22 +191,38 @@ const DataGraph2 = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    const options = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Publishers"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "Number of published games"
+          }
+        }
+      },
+    };
     const data = {
       labels: jsonData.Publisher,
       datasets: [
         {
           data: jsonData.N_Games,
-          label: "Número de juegos publicados"
+          label: "Number of published games"
         }
       ],
     }
     
-    returnContent = <CChart type="bar" data={data} />;
+    returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
   return (
     <div>
-      <h1>Top 10 Publishers </h1>
+      <h1>Top 10 Publishers (by # of published games)</h1>
       {returnContent}
     </div>
   )
@@ -350,20 +368,57 @@ const DataGraph6 = () => {
             data: [ {
               x: item.price,
               y: item.positive_ratings,
-              r: item.avg_owners / 1000000,
+              r: item.avg_owners / 2500000,
             } ]
           };
         });
+
+    const options = {
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "Price (USD)"
+          }
+        },
+        y: {
+          title: {
+            display: true,
+            text: "% of Positive reviews"
+          }
+        },
+      },
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return `${tooltipItem.dataset.label}:`;
+            },
+            afterLabel: (tooltipItem) => {
+              const x = "(x) Price (USD): $" + tooltipItem.dataset.data[0].x.toLocaleString();
+              const y = "(y) % Positive Reviews: " + tooltipItem.dataset.data[0].y.toLocaleString() + "%";
+              const r = "(radius) Average # of owners: " + (tooltipItem.dataset.data[0].r * 2500000).toLocaleString();
+              return `${x}\n${y}\n${r}`;
+            }
+          },
+        },
+      }
+    };
     const data = {
       datasets:  resultData,
     };
 
-    returnContent = <CChart type="bubble" data={data} />;
+    returnContent = <Bubble options={options} data={data} />;
   }
 
   return (
     <div>
-      <h1>Top 10 Games by Avg_owners</h1>
+      <h1>Top 100 Games by average # of owners, price and % of positive reviews</h1>
       {returnContent}
     </div>
   );
@@ -382,18 +437,53 @@ const DataGraph7 = () => {
   }, []); // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
-    const resultData = jsonData.slice(0, 10).map((item, index) => {
+    const resultData = jsonData.map((item) => {
       return {
         label: item.name,
         data: [
           {
-            x: index + 1 + ": " + item.name,
             y: item.average_playtime,
-            r: item.avg_owners / 10000, // Dividir por un factor para hacer los círculos más pequeños
+            x: item.avg_owners, // Dividir por un factor para hacer los círculos más pequeños
           },
         ],
       };
     });
+
+    const options = {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Average total playtime (min)"
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Average # of owners"
+          }
+        }
+      },
+
+      plugins: {
+        legend: {
+          display: false,
+        },
+
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return `${tooltipItem.dataset.label}:`;
+            },
+            afterLabel: (tooltipItem) => {
+              const y = "(y) Average total playtime (min): " + tooltipItem.dataset.data[0].x.toLocaleString();
+              const x = "(x) Average # of owners: " + tooltipItem.dataset.data[0].y.toLocaleString();
+              return `${x}\n${y}`;
+            }
+          },
+        },
+      }
+    };
     const data = {
       datasets: resultData,
     };
@@ -408,7 +498,7 @@ const DataGraph7 = () => {
 
   return (
     <div>
-      <h1>Top 10 Games by Avg_owners</h1>
+      <h1>Top 100 Games by average total playtime (per player)</h1>
       {returnContent}
     </div>
   );
