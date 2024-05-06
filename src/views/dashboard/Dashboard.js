@@ -22,6 +22,7 @@ import {
   CTableHead,
   CTableHeaderCell,
   CTableRow,
+  CWidgetStatsD
 } from '@coreui/react'
 import CIcon from '@coreui/icons-react'
 import {
@@ -96,8 +97,9 @@ const Dashboard = () => {
         <p>En la siguiente sección se mostrarán los resultados obtenidos de la base de datos de Steam</p>
         <p></p>
       </div>
+      <DataGraph15 withCharts={true} ></DataGraph15>
       <WidgetsBrand className="mb-4" withCharts />
-      <div className="row">
+    <div className="row">
       <DataGraph5 />
       <DataGraph5_1 />
     </div>
@@ -601,5 +603,55 @@ const DataGraph7 = () => {
     </div>
   );
 };
+
+// DataGraph15
+const DataGraph15 = (props) => {
+  const [jsonData, setJsonData] = useState(null)
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data11');
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const columns = jsonData.map((item) => {
+      return (
+        <CCol sm={6} xl={4} xxl={3} key={item.Category}>
+          <CWidgetStatsD
+            {...{
+              chart: (
+                <div className="position-absolute w-100 h-100 d-flex align-items-center justify-content-center">
+                  <span className="text-white" style={{ fontSize: '20px' }}>{item.Category}</span>
+                </div>
+              ),
+            }}
+            values={[
+              { title:"Count", value: Number(item.Category_Count).toLocaleString()},
+              { title: "Average Owners" ,value: Number(item.avg_owners_per_cat).toLocaleString() },
+            ]}
+            style={{ '--cui-card-cap-bg': '#3b5998', }}
+          />
+        </CCol>
+      );
+    });
+
+    returnContent = (
+      <CRow className={props.className} xs={{ gutter: 4 }}>
+      {columns}
+      </CRow>
+    )
+  }
+
+  return (
+    <div>
+      <h1>Categories Widget</h1>
+      {returnContent}
+    </div>
+  );
+}
 
 export default Dashboard
