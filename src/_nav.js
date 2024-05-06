@@ -100,12 +100,6 @@ const _nav = [
         to: 'http://localhost:8000/data11',
         target: '_blank',
       },
-      {
-        component: CNavItem,
-        name: 'Data 12',
-        to: 'http://localhost:8000/data12',
-        target: '_blank',
-      },
     ],
   },
   {

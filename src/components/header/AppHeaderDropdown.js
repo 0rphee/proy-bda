@@ -22,14 +22,20 @@ import {
 } from '@coreui/icons'
 import CIcon from '@coreui/icons-react'
 
+import avatar1 from './../../assets/images/avatars/1.jpg'
+import avatar2 from './../../assets/images/avatars/2.jpg'
+import avatar3 from './../../assets/images/avatars/3.jpg'
 import avatar4 from './../../assets/images/avatars/4.jpg'
 
 const AppHeaderDropdown = () => {
   return (
     <CDropdown variant="nav-item">
       <CDropdownToggle placement="bottom-end" className="py-0 pe-0" caret={false}>
-        <CAvatar src={avatar4} size="md" />
-      </CDropdownToggle>
+  <CAvatar src={avatar1} size="md" style={{ marginRight: '5px' }} />
+  <CAvatar src={avatar2} size="md" style={{ marginRight: '5px' }} />
+  <CAvatar src={avatar3} size="md" style={{ marginRight: '5px' }} />
+  <CAvatar src={avatar4} size="md" />
+</CDropdownToggle>
       <CDropdownMenu className="pt-0" placement="bottom-end">
         <CDropdownHeader className="bg-body-secondary fw-semibold mb-2">Account</CDropdownHeader>
         <CDropdownItem href="#">
