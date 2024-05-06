@@ -735,15 +735,17 @@ const DataGraph13 = () => {
   const [jsonData, setJsonData] = useState(null);
 
   let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) => {
+    returnContent = content;
+  };
 
   useEffect(() => {
-    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data7'); // data7 es a propósito
   }, []);
 
-  useEffect(() => {
     if (jsonData) {
-      const progressGroupData = jsonData.filter(item => item.title.includes("name")).map(item => ({
-        title: item.title,
+      const progressGroupData = jsonData.filter(item => item.name.includes("name")).map(item => ({
+        title: item.name,
         value1: item.average_playtime,
         value2: item.avg_owners
       }));
@@ -753,7 +755,7 @@ const DataGraph13 = () => {
           {progressGroupData.map((item, index) => (
             <div className="progress-group mb-4" key={index}>
               <div className="progress-group-prepend">
-                <span className="text-body-secondary small">{item.title}</span>
+                <span className="text-body-secondary small">{item.name}</span>
               </div>
               <div className="progress-group-bars">
                 <CProgress thin color="info" value={item.value1} />
@@ -764,7 +766,6 @@ const DataGraph13 = () => {
         </>
       );
     }
-  }, [jsonData]);
 
   return (
     <div>
@@ -778,52 +779,59 @@ const DataGraph13 = () => {
 const DataGraph14 = () => {
   const [jsonData, setJsonData] = useState(null);
 
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) => {
+    returnContent = content;
+  };
+
   useEffect(() => {
-    fetchData(setJsonData, 'http://127.0.0.1:8000/data7');
+    fetchData(setJsonData,setReturnContent, 'http://127.0.0.1:8000/data7');
   }, []);
 
-  if (!jsonData) {
-    return <p>Loading...</p>;
+  if (jsonData) {
+    const chartData = {
+      labels: jsonData.map(entry => entry.name),
+      datasets: [
+        {
+          label: 'Average Playtime',
+          backgroundColor: 'rgba(75,192,192,0.4)',
+          borderColor: 'rgba(75,192,192,1)',
+          borderWidth: 2,
+          data: jsonData.map(entry => entry.average_playtime)
+        },
+        {
+          label: 'Average Owners',
+          backgroundColor: 'rgba(255,99,132,0.4)',
+          borderColor: 'rgba(255,99,132,1)',
+          borderWidth: 2,
+          data: jsonData.map(entry => entry.avg_owners)
+        }
+      ]
+    };
+
+    const chartOptions = {
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          display: true,
+          position: 'top'
+        }
+      }
+    };
+
+    returnContent = (
+      <CChart type="line"
+        style={{ height: '300px', marginTop: '40px' }}
+        datasets={chartData}
+        options={chartOptions}
+      />
+    )
   }
-
-  const chartData = {
-    labels: jsonData.map(entry => entry.name),
-    datasets: [
-      {
-        label: 'Average Playtime',
-        backgroundColor: 'rgba(75,192,192,0.4)',
-        borderColor: 'rgba(75,192,192,1)',
-        borderWidth: 2,
-        data: jsonData.map(entry => entry.average_playtime)
-      },
-      {
-        label: 'Average Owners',
-        backgroundColor: 'rgba(255,99,132,0.4)',
-        borderColor: 'rgba(255,99,132,1)',
-        borderWidth: 2,
-        data: jsonData.map(entry => entry.avg_owners)
-      }
-    ]
-  };
-
-  const chartOptions = {
-    maintainAspectRatio: false,
-    plugins: {
-      legend: {
-        display: true,
-        position: 'top'
-      }
-    }
-  };
 
   return (
     <div>
       <h2 className="text-center mb-4">Average Playtime and Average Owners</h2>
-      <CChartLine
-        style={{ height: '300px', marginTop: '40px' }}
-        datasets={chartData.datasets}
-        options={chartOptions}
-      />
+      {returnContent}
     </div>
   );
 };
