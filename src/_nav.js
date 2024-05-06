@@ -21,88 +21,60 @@ const _nav = [
     icon: <CIcon icon={cilSpeedometer} customClassName="nav-icon" />,
     badge: {
       color: 'info',
-      text: 'Awards',
+      text: 'Nuevo',
     },
   },
   {
     component: CNavTitle,
-    name: 'Team Components',
+    name: 'Componentes',
   },
   {
     component: CNavGroup,
-    name: 'Base',
+    name: 'Datos',
     to: '/base',
     icon: <CIcon icon={cilPuzzle} customClassName="nav-icon" />,
     items: [
       {
         component: CNavItem,
-        name: 'Accordion',
-        to: '/base/accordion',
+        name: 'Data 1',
+        to: 'http://localhost:8000/data',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'Breadcrumb',
-        to: '/base/breadcrumbs',
+        name: 'Data 2',
+        to: 'http://localhost:8000/data1',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'Cards',
-        to: '/base/cards',
+        name: 'Data 3',
+        to: 'http://localhost:8000/data2',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'Carousel',
-        to: '/base/carousels',
+        name: 'Data 6',
+        to: 'http://localhost:8000/data6',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'Collapse',
-        to: '/base/collapses',
+        name: 'Data 7',
+        to: 'http://localhost:8000/data7',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'List group',
-        to: '/base/list-groups',
+        name: 'Data 11',
+        to: 'http://localhost:8000/data11',
+        target: '_blank',
       },
       {
         component: CNavItem,
-        name: 'Navs & Tabs',
-        to: '/base/navs',
-      },
-      {
-        component: CNavItem,
-        name: 'Pagination',
-        to: '/base/paginations',
-      },
-      {
-        component: CNavItem,
-        name: 'Placeholders',
-        to: '/base/placeholders',
-      },
-      {
-        component: CNavItem,
-        name: 'Popovers',
-        to: '/base/popovers',
-      },
-      {
-        component: CNavItem,
-        name: 'Progress',
-        to: '/base/progress',
-      },
-      {
-        component: CNavItem,
-        name: 'Spinners',
-        to: '/base/spinners',
-      },
-      {
-        component: CNavItem,
-        name: 'Tables',
-        to: '/base/tables',
-      },
-      {
-        component: CNavItem,
-        name: 'Tooltips',
-        to: '/base/tooltips',
+        name: 'Data 12',
+        to: 'http://localhost:8000/data12',
+        target: '_blank',
       },
     ],
   },
@@ -117,16 +89,6 @@ const _nav = [
         name: 'Buttons',
         to: '/buttons/buttons',
       },
-      {
-        component: CNavItem,
-        name: 'Buttons groups',
-        to: '/buttons/button-groups',
-      },
-      {
-        component: CNavItem,
-        name: 'Dropdowns',
-        to: '/buttons/dropdowns',
-      },
     ],
   },
   {
@@ -138,41 +100,6 @@ const _nav = [
         component: CNavItem,
         name: 'Form Control',
         to: '/forms/form-control',
-      },
-      {
-        component: CNavItem,
-        name: 'Select',
-        to: '/forms/select',
-      },
-      {
-        component: CNavItem,
-        name: 'Checks & Radios',
-        to: '/forms/checks-radios',
-      },
-      {
-        component: CNavItem,
-        name: 'Range',
-        to: '/forms/range',
-      },
-      {
-        component: CNavItem,
-        name: 'Input Group',
-        to: '/forms/input-group',
-      },
-      {
-        component: CNavItem,
-        name: 'Floating Labels',
-        to: '/forms/floating-labels',
-      },
-      {
-        component: CNavItem,
-        name: 'Layout',
-        to: '/forms/layout',
-      },
-      {
-        component: CNavItem,
-        name: 'Validation',
-        to: '/forms/validation',
       },
     ],
   },
@@ -196,16 +123,6 @@ const _nav = [
           text: 'NEW',
         },
       },
-      {
-        component: CNavItem,
-        name: 'CoreUI Flags',
-        to: '/icons/flags',
-      },
-      {
-        component: CNavItem,
-        name: 'CoreUI Brands',
-        to: '/icons/brands',
-      },
     ],
   },
   {
@@ -218,21 +135,6 @@ const _nav = [
         name: 'Alerts',
         to: '/notifications/alerts',
       },
-      {
-        component: CNavItem,
-        name: 'Badges',
-        to: '/notifications/badges',
-      },
-      {
-        component: CNavItem,
-        name: 'Modal',
-        to: '/notifications/modals',
-      },
-      {
-        component: CNavItem,
-        name: 'Toasts',
-        to: '/notifications/toasts',
-      },
     ],
   },
   {
@@ -240,10 +142,6 @@ const _nav = [
     name: 'Widgets',
     to: '/widgets',
     icon: <CIcon icon={cilCalculator} customClassName="nav-icon" />,
-    badge: {
-      color: 'info',
-      text: 'NEW',
-    },
   },
 ]
 
