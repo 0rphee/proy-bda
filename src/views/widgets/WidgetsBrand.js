@@ -44,8 +44,8 @@ const WidgetsBrand = (props) => {
       ),
     })}
     values={[
-      { title:"Count", value: 25678},
-      { title: "avg_owners_per_cat" ,value: 106503},
+      { title:"Count", value: (25678).toLocaleString()},
+      { title: "Average Owners" ,value: (106503).toLocaleString() },
     ]}
     style={{
       '--cui-card-cap-bg': '#3b5998',
@@ -63,8 +63,8 @@ const WidgetsBrand = (props) => {
       ),
     })}
     values={[
-      { title:"Count", value: 3974},
-      { title: "avg_owners_per_cat" ,value: 445575},
+      { title:"Count", value: (3974).toLocaleString()},
+      { title: "Average Owners" ,value: (445575).toLocaleString()},
     ]}
     style={{
       '--cui-card-cap-bg': '#3b5998',
@@ -81,8 +81,8 @@ const WidgetsBrand = (props) => {
       ),
     })}
     values={[
-      { title:"Count", value: 2487},
-      { title: "avg_owners_per_cat" ,value: 289413},
+      { title:"Count", value: (2487).toLocaleString()},
+      { title: "Average Owners" ,value: (289413).toLocaleString()},
     ]}
     style={{
       '--cui-card-cap-bg': '#3b5998',
@@ -99,8 +99,8 @@ const WidgetsBrand = (props) => {
       ),
     })}
     values={[
-      { title:"Count", value: 2152},
-      { title: "avg_owners_per_cat" ,value: 107196},
+      { title:"Count", value: (2152).toLocaleString()},
+      { title: "Average Owners" ,value: (107196).toLocaleString()},
     ]}
     style={{
       '--cui-card-cap-bg': '#3b5998',
