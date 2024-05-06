@@ -14,6 +14,7 @@ import {
   CCardHeader,
   CCol,
   CProgress,
+  CProgressStacked,
   CRow,
   CTable,
   CTableBody,
@@ -397,6 +398,7 @@ const Dashboard = () => {
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph6></DataGraph6>
+      <DataGraph4></DataGraph4>
       
     </>
   )
@@ -575,6 +577,70 @@ const DataGraph3 = () => {
     </div>
   );
 };
+
+const DataGraph4 = () => {
+  const [jsonData, setJsonData] = useState(null)
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data4');
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const options = {
+      indexAxis: 'y',
+      scales: {
+        x: {
+          title: {
+            display: true,
+            text: "# of games by genre"
+          }
+        },
+        x2: {
+          title: {
+            display: true,
+            text: "Average owners by genre"
+          }
+        },
+
+        y: {
+          title: {
+            display: true,
+            text: "Genres"
+          }
+        },
+      },
+    };
+    const data = {
+      labels: jsonData.genre,
+      datasets: [
+        {
+          data: jsonData.genre_count,
+          label: "# of games by genre",
+          xAxisID: "x",
+        },
+        {
+          data: jsonData.avg_owners_per_genre,
+          label: "Average owners by genre",
+          xAxisID: "x2",
+        }
+      ],
+    }
+
+    returnContent = <CChart type="bar" options={options} data={data} />;
+  }
+
+  return (
+    <div>
+      <h1>Number of games published by genre and their average number of owners</h1>
+      {returnContent}
+    </div>
+  )
+}
 
 const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
