@@ -97,11 +97,15 @@ const Dashboard = () => {
         <p></p>
       </div>
       <WidgetsBrand className="mb-4" withCharts />
+      <div className="row">
+      <DataGraph5 />
+      <DataGraph5_1 />
+    </div>
+      <DualDataGraphs></DualDataGraphs>
       <DataGraph1></DataGraph1>
       <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
       <DataGraph4></DataGraph4>
-      <DataGraph5></DataGraph5>
       <DataGraph6></DataGraph6>
       <DataGraph4></DataGraph4>
       <DataGraph7></DataGraph7>
@@ -381,13 +385,67 @@ const DataGraph5 = () => {
           </CCardBody>
         </CCard>
       </CCol>
+      
     );
   }
 
   return (
     <div>
-      <h1>Top 100 Games by average total playtime (per player)</h1>
+      <h1> #juegos que son aceptados en plataforma y #usuarios son dueños de un juego</h1>
       {returnContent}
+    </div>
+  );
+};
+
+
+const DataGraph5_1 = () => {
+  const [jsonData, setJsonData] = useState(null);
+
+  let returnContent = <p>Loading...</p>;
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data11');
+  }, []);
+
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
+
+  if (jsonData) {
+    const data = {
+      labels: jsonData.map(item => item.Category),
+      datasets: [
+        {
+          data: jsonData.map(item => item.Category_Count),
+        },
+      ],
+    };
+
+    returnContent = (
+      <CCol xs={6}>
+        <CCard className="mb-4">
+          <CCardHeader>Pie Chart</CCardHeader>
+          <CCardBody>
+            <CChartPie data={data} />
+          </CCardBody>
+        </CCard>
+      </CCol>
+    );
+  }
+
+  return (
+    <div>
+      <h1> prueba</h1>
+      {returnContent}
+    </div>
+  );
+};
+
+const DualDataGraphs = () => {
+  return (
+    <div className="row">
+      <DataGraph5 />
+      <DataGraph5_1 />
     </div>
   );
 };
