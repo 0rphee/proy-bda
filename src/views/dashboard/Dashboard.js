@@ -1,6 +1,6 @@
 import { React, useState, useEffect } from 'react'
 import { Chart } from 'chart.js/auto'
-import { Bar, Bubble } from 'react-chartjs-2'
+import { Bar, Bubble, PolarArea } from 'react-chartjs-2'
 import { CChart } from '@coreui/react-chartjs'
 import classNames from 'classnames'
 
@@ -32,7 +32,9 @@ const Dashboard = () => {
         <p>En la siguiente sección se mostrarán los resultados obtenidos de la base de datos de Steam</p>
         <p></p>
       </div>
+
       <DataGraph15 withCharts={true} ></DataGraph15>
+
       <CRow>
         <CCol xs={6}>
           <CCard className="mb-4">
@@ -52,9 +54,28 @@ const Dashboard = () => {
         </CCol>
       </CRow>
       
-      <DataGraph1></DataGraph1>
-      <DataGraph2></DataGraph2>
       <DataGraph3></DataGraph3>
+
+      <CRow>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>Top 10 Developers (by # of published games)</CCardHeader>
+            <CCardBody>
+              <DataGraph1></DataGraph1>
+            </CCardBody>
+          </CCard>
+        </CCol>
+        <CCol xs={6}>
+          <CCard className="mb-4">
+            <CCardHeader>Top 10 Publishers (by # of published games)</CCardHeader>
+            <CCardBody>
+              <DataGraph2></DataGraph2>
+            </CCardBody>
+          </CCard>
+        </CCol>
+      </CRow>
+
+
       <DataGraph4></DataGraph4>
       <DataGraph6></DataGraph6>
       <DataGraph7></DataGraph7>
@@ -122,12 +143,13 @@ const DataGraph1 = () => {
     returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
-  return (
-    <div>
-      <h1>Top 10 Developers (by # of published games)</h1>
-      {returnContent}
-    </div>
-  )
+  // return (
+  //   <div>
+  //     <h1>Top 10 Developers (by # of published games)</h1>
+  //     {returnContent}
+  //   </div>
+  // )
+  return returnContent;
 }
 
 const DataGraph2 = () => {
@@ -144,14 +166,15 @@ const DataGraph2 = () => {
 
   if (jsonData) {
     const options = {
+      indexAxis: 'y',
       scales: {
-        x: {
+        y: {
           title: {
             display: true,
             text: "Publishers"
           }
         },
-        y: {
+        x: {
           title: {
             display: true,
             text: "Number of published games"
@@ -172,12 +195,7 @@ const DataGraph2 = () => {
     returnContent = <CChart type="bar" options={options} data={data} />;
   }
 
-  return (
-    <div>
-      <h1>Top 10 Publishers (by # of published games)</h1>
-      {returnContent}
-    </div>
-  )
+  return returnContent;
 }
 
 const DataGraph3 = () => {
@@ -315,17 +333,30 @@ const DataGraph5 = () => {
   }, []) // Empty dependency array ensures the effect runs only once
 
   if (jsonData) {
+    const options = {
+      plugins: {
+        title: {
+          display: true,
+          text: "Number of games available by platform",
+        },
+        tooltip: {
+          callbacks: {
+            label: (tooltipItem) => {
+              return "# of games available: " + tooltipItem.raw.toLocaleString();
+            },
+          },
+        },
+      }    };
+
     const data = {
       labels: jsonData.platform,
       datasets: [
         {
           data: jsonData.platform_count,
-          // backgroundColor: backgroundColor,
-          // hoverBackgroundColor: backgroundColor,
         },
       ],
     }
-    returnContent = <CChart type="polarArea" data={data} />;
+    returnContent = <PolarArea type="polarArea" options={options} data={data} />;
   }
 
   return returnContent;
@@ -552,7 +583,7 @@ const DataGraph15 = (props) => {
       <CRow className={props.className} xs={{ gutter: 4 }}>
       {columns}
       </CRow>
-    )
+    );
   }
 
   return (
