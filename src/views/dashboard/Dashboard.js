@@ -103,7 +103,6 @@ const Dashboard = () => {
       <DataGraph4></DataGraph4>
       <DataGraph5></DataGraph5>
       <DataGraph6></DataGraph6>
-      <DataGraph4></DataGraph4>
       <DataGraph7></DataGraph7>
       
     </>
