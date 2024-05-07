@@ -53,8 +53,9 @@ const Dashboard = () => {
           </CCard>
         </CCol>
       </CRow>
-      
+
       <DataGraph3></DataGraph3>
+      <DataGraph4></DataGraph4>
 
       <CRow>
         <CCol xs={6}>
@@ -75,8 +76,6 @@ const Dashboard = () => {
         </CCol>
       </CRow>
 
-
-      <DataGraph4></DataGraph4>
       <DataGraph6></DataGraph6>
       <DataGraph7></DataGraph7>
       
