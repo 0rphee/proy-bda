@@ -61,7 +61,7 @@ const AppHeader = () => {
             <CNavLink href="http://localhost:8080/" target="_blank">phpMyAdmin</CNavLink>
           </CNavItem>
           <CNavItem>
-            <CNavLink href="https://docs.google.com/document/d/1J1wKIMP3GSoFywewElQ3j3RH86hPvZom/edit" target="_blank">Rúbrica</CNavLink>
+            <CNavLink href="https://drive.google.com/file/d/1eL43Q96-rDzjjbqfa-yYXcLzX2gFoSpu/view" target="_blank">Rúbrica</CNavLink>
           </CNavItem>
         </CHeaderNav>
         <CHeaderNav className="ms-auto">
