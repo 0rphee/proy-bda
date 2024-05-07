@@ -319,7 +319,7 @@ const DataGraph4 = () => {
 
   return (
     <div>
-      <h1>Number of games published by genre and their average number of owners</h1>
+      <h2>Number of games published by genre and their average number of owners</h2>
       {returnContent}
     </div>
   )
@@ -440,7 +440,7 @@ const DataGraph6 = () => {
 
   return (
     <div>
-      <h1>Top 100 Games by average # of owners, price and % of positive reviews</h1>
+      <h2>Top 100 Games by average # of owners, price and % of positive reviews</h2>
       {returnContent}
     </div>
   );
@@ -520,7 +520,7 @@ const DataGraph7 = () => {
 
   return (
     <div>
-      <h1>Top 100 Games by average total playtime (per player)</h1>
+      <h2>Top 100 Games by average total playtime (per player)</h2>
       {returnContent}
     </div>
   );
@@ -570,7 +570,7 @@ const DataGraph15 = (props) => {
 
   return (
     <div>
-      <h1>Category information</h1>
+      <h2>Category information</h2>
       {returnContent}
     </div>
   );
