@@ -46,9 +46,9 @@ const Dashboard = () => {
         </CCol>
         <CCol xs={6}>
           <CCard className="mb-4">
-            <CCardHeader>Mamma mia</CCardHeader>
+            <CCardHeader>Average estimated earnings per game by genre</CCardHeader>
             <CCardBody>
-              {false ? <DataGraph7 /> : <DataGraph5_1 />}
+              <DataGraph20 />
             </CCardBody>
           </CCard>
         </CCol>
@@ -291,6 +291,12 @@ const DataGraph4 = () => {
           }
         },
       },
+      plugins: {
+        title: {
+          display: true,
+          text: "Number of games published by genre, and the average number of owners for games in that genre.",
+        },
+    }
     };
     const data = {
       labels: jsonData.genre,
@@ -362,35 +368,6 @@ const DataGraph5 = () => {
   return returnContent;
 };
 
-const DataGraph5_1 = () => {
-  const [jsonData, setJsonData] = useState(null);
-
-  let returnContent = <p>Loading...</p>;
-
-  useEffect(() => {
-    fetchData(setJsonData, setReturnContent, 'http://127.0.0.1:8000/data11');
-  }, []);
-
-  const setReturnContent = (content) =>{
-    returnContent = content;
-  };
-
-  if (jsonData) {
-    const data = {
-      labels: jsonData.map(item => item.Category),
-      datasets: [
-        {
-          data: jsonData.map(item => item.Category_Count),
-        },
-      ],
-    };
-
-    returnContent = <CChart type="polarArea" data={data} />;
-  }
-
-  return returnContent;
-};
-
 const DataGraph6 = () => {
   const [jsonData, setJsonData] = useState(null);
 
@@ -435,7 +412,10 @@ const DataGraph6 = () => {
         legend: {
           display: false,
         },
-
+        title: {
+          display: true,
+          text: "Top 100 games by number of owners, displayed by their ('x' axis) Price (USD), ('y' axis) % of Positive Reviews (from the total review number), and (radius) the their number of owners.",
+        },
         tooltip: {
           callbacks: {
             label: (tooltipItem) => {
@@ -512,7 +492,10 @@ const DataGraph7 = () => {
         legend: {
           display: false,
         },
-
+        title: {
+          display: true,
+          text: "Top 100 Games with the highest ('y' axis) average total playtime (per player) displayed by the ('x' axis) average number of owners.",
+        },
         tooltip: {
           callbacks: {
             label: (tooltipItem) => {
@@ -592,6 +575,52 @@ const DataGraph15 = (props) => {
       {returnContent}
     </div>
   );
+}
+
+const DataGraph20 = () => {
+  const [jsonData, setJsonData] = useState(null)
+
+  let returnContent = <p>Loading...</p>;
+  const setReturnContent = (content) =>{
+    returnContent = content;
+  };
+
+  useEffect(() => {
+    fetchData(setJsonData, setReturnContent,'http://127.0.0.1:8000/data20');
+  }, []) // Empty dependency array ensures the effect runs only once
+
+  if (jsonData) {
+    const options = {
+      scales: {
+        y: {
+          title: {
+            display: true,
+            text: "Average estimated earnings per game (USD)"
+          }
+        },
+        x: {
+          title: {
+            display: true,
+            text: "Genres"
+          }
+        }
+      },
+    };
+
+    const data = {
+      labels: jsonData.genre,
+      datasets: [
+        {
+          data: jsonData.avg_estimated_earnings_per_game,
+          label: "Average estimated earnings per game (USD)"
+        }
+      ],
+    }
+
+    returnContent = <CChart type="bar" options={options} data={data} />;
+  }
+
+  return returnContent;
 }
 
 export default Dashboard
